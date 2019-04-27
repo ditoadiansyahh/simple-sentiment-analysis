@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>NLP Analysis</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{url_for('static', filename='./css/style.css')}}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="jumbotron text-center">
+        <h2>Natural Language Processing</h2>
+        <p class="lead">a simple text sentiment analysis using textblob</p>
+        <p class="blockquote-footer">
+          by
+          <a href="https://www.linkedin.com/in/rachmaddinta1997/"
+            >@ditoadiansyahh</a
+          >.
+        </p>
+      </div>
+      <div class="row">
+        <div class="col-md 8">
+          <form method="POST" action="{{ url_for('analyze') }}" novalidate>
+            <div class="row">
+              <div class="col-md-10">
+                {{ form.csrf_token }}
+                <div class="form-group">
+                  {{ form.text(id="area", class='form-control', rows='5', placeholder="Input your text here..") }}
+                </div>
+              </div>
+              <div class=" col-md-2 float-right">
+                <button
+                  type="button"
+                  onclick="myFunction()"
+                  class="btn btn-outline-secondary btn-block "
+                >
+                  Sample
+                </button>
+                <button
+                  type="reset"
+                  id="reset"
+                  value="reset"
+                  class="btn btn-outline-danger btn-block"
+                  onclick="clearAnswer()"
+                >
+                  Clear
+                </button>
+
+                <input
+                  type="submit"
+                  value="Analyze"
+                  class="btn btn-success btn-block"
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-1 text-center">
+          <h4 class="align-middle">Or</h4>
+        </div>
+        <div class="col-md-3">
+          <h5>Upload txt</h5>
+          <form
+            method="POST"
+            enctype="multipart/form-data"
+            action="{{ url_for('dataupload') }}"
+            novalidate
+          >
+            {{ upload.csrf_token }}
+            <div class="form-group">
+              {{ upload.txtfiles() }}
+              <ul class="text-danger">
+                {% for error in upload.txtfiles.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            <input type="submit" value="Upload" class="btn btn-success" />
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="container mt-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h4>Your Input:</h4>
+              <p>{{ blob }}</p>
+              <hr />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <h5>Result</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <ul>
+                <li>Num of Words : {{ numofwords }}</li>
+              </ul>
+              <table class="table table-bordered">
+                <tr>
+                  <th>Polarity</th>
+                  {% if not polarity %}
+                  <td></td>
+                  {% elif polarity > 0 %}
+                  <td style="background-color: #90EE90">{{ polarity }}</td>
+                  {% else %}
+                  <td style="background-color: #FA8072">{{ polarity }}</td>
+                  {% endif %}
+                </tr>
+                <tr>
+                  <th>Subjectivity</th>
+                  <td>{{ subjectivity }}</td>
+                </tr>
+              </table>
+            </div>
+            <div class="col">
+              <div class="row">
+                <p class="lead">Note:</p>
+              </div>
+              <div class="row">
+                <p>Polarity: negative - positive (-1.0 - +1.0)</p>
+                <p>subjectivity: objective - subjective (0.0 - +1.0)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+      var text =
+        "i hate being a college student, homework makes me mad every night. i dont like the teacher though";
+      function myFunction() {
+        document.getElementById("area").innerHTML = text;
+      }
+      function clearAnswer() {
+        document.getElementById("area").innerHTML = "";
+      }
+    </script>
+  </body>
+</html>

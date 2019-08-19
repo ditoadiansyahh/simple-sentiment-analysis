@@ -9,5 +9,6 @@ textblob
 ```
 ## Running the app
 ```
+open project directory
 py app.py
 ```
